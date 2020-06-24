@@ -4,21 +4,27 @@
     console.log("%c[START]-----------持续改进中-1.0------------", "color: green");
     console.log("%c[START]-------------------------------------", "color: green");
 
-    var tpAll = document.getElementsByClassName('tp');
-    let i = 0;
-    for (i = 0; i < tpAll.length; i++) {
-        tpAll[i].style.position = "absolute";
-        tpAll[i].style.opacity = '0';
+    const AUTO_TAG="autotp";
+    const TIME_ART="f-time";
+    const TP_TAG="tp";
+    const TP_VALUE_ART="f-pos";
+    const TP_SAVE_ART= "f-ifsave";
+    const TP_BIND_ART="f-bind";
+    
+    var tpAuto = document.getElementsByTagName(AUTO_TAG);
+     for (i = 0; i < tpAuto.length; i++) {
+         tpAuto[i].setAttribute("f-start-time",tpAuto[i].getAttribute(TIME_ART))
+         
     }
+    render(tpAuto,0);
 
-    tpAll = document.getElementsByClassName('tpauto');
-
-    for (i = 0; i < tpAll.length; i++) {
-        tpAll[i].style.position = "absolute";
-        tpAll[i].style.opacity = '0';
+    var tpAuto = document.getElementsByTagName(TP_TAG);
+    
+     for (i = 0; i < tpAuto.length; i++) {
+         tpAuto[i].setAttribute("f-start-time",tpAuto[i].getAttribute(TIME_ART))
+         hideElement(tpAuto[i])
     }
-
-
+    render(tpAuto,0);
 
 
 
@@ -31,7 +37,7 @@
         console.log("%c[ERROR]---tp-conf didn't exist-------", "color: red;background-color:white;font-size:15px");
     } else {
         if (document.getElementsByClassName('tp-conf')[0].getAttribute('autospeed') == null) {
-            console.log("%c[ERROR]---autospeed didn't initialization-------", "color: red;background-color:black;font-size:15px");
+            console.log("%c[WARN]---autospeed didn't initialization-------", "color: yellow;background-color:black;font-size:15px");
             console.log("%c[WARN]---autospeed is defult value:1-----------", "color: yellow;background-color:black;font-size:15px");
         } else {
             autospeed = document.getElementsByClassName('tp-conf')[0].getAttribute('autospeed');
@@ -44,48 +50,19 @@
         }
     }
 
-    function tr(e){
-        console.log("end");
-        e.style.display="none"
-        e.removeEventListener("transitionend",tr);
-    }
     function hideElement(e){
         e.style.opacity = '0';
-        //e.addEventListener("transitionend",tr(e))
-        
-        var pr=new Promise((resolve,reject)=>{
-            if(e.style.opacity=='0'){
-                resolve(1);
-            }
-        }).then(
-            e.style.display="none"
-        )
-        
+        e.style.display="none"
     }
     function showElement(e){
         e.style.display="block";
-        //e.style.opacity = '1';
-        /*
-        e.addEventListener("transitionend",function sh(){
-            console.log("star");
-            //e.style.display="none"
-            e.removeEventListener("transitionend",tr);
-        })
-        */
-        var pr=new Promise((resolve,reject)=>{
-            if(e.style.display=='block'){
-                resolve(1);
-            }
-        }).then(
-            e.style.opacity="1"
-        )
-        
+        e.style.opacity = '1';
     }
     //渲染core
     function render(tpAll,autotime){
         ///渲染
         for (i = 0; i < tpAll.length; i++) {
-            let timearr = tpAll[i].getAttribute('f-time').split("/");
+            let timearr = tpAll[i].getAttribute(TIME_ART).split("/");
             var j = 0;
             for (j = 0; j < timearr.length; j++) {
                 if (autotime >= timearr[j] && autotime <= timearr[j + 1]) {
@@ -105,16 +82,16 @@
             if (autotime >= timefrom && autotime <= timeto) {
                 //显示时渲染
                 showElement(tpAll[i]);
-                //tpAll[i].style.opacity = '1';
 
-                let posfrom = tpAll[i].getAttribute('f-pos').split('/')[j];
-                let posto = tpAll[i].getAttribute('f-pos').split('/')[j + 1];
+
+                let posfrom = tpAll[i].getAttribute(TP_VALUE_ART).split('/')[j];
+                let posto = tpAll[i].getAttribute(TP_VALUE_ART).split('/')[j + 1];
 
                 let bindarr;
-                if (tpAll[i].getAttribute('f-bind') == null) {
+                if (tpAll[i].getAttribute(TP_BIND_ART) == null) {
                     bindarr = ["left,$px", "top,$px"]
                 } else {
-                    bindarr = tpAll[i].getAttribute('f-bind').split('/');
+                    bindarr = tpAll[i].getAttribute(TP_BIND_ART).split('/');
                 }
                 var k = 0;
                 for (k = 0; k < bindarr.length; k++) {
@@ -127,54 +104,87 @@
 
             } else if (autotime >= timeto) {
                 //结束处理
-                if (tpAll[i].getAttribute('f-ifsave') == "true") {
+                if (tpAll[i].getAttribute(TP_SAVE_ART) == "true") {
 
                     showElement(tpAll[i]);
                     //tpAll[i].style.opacity = '1';
-                } else if (tpAll[i].getAttribute('f-ifsave') == "auto") {
+                } else if (tpAll[i].getAttribute(TP_SAVE_ART) == "auto") {
                     ///循环动画处理
-                    let tottar=tpAll[i].getAttribute('f-time');
-                    let tar = tottar.split("/");
-                    var re = "/";
-                    for (let ii = 0; ii < tar.length; ii++) {
-                        re += parseInt(tar[ii]) + parseInt(tar[tar.length - 1]) - parseInt(tar[0]);
-                        if (ii == tar.length - 1) {
-
-                        } else {
-                            re += "/";
-                        }
+                    let startTime=tpAll[i].getAttribute("f-start-time");
+                    let startArray=startTime.split("/");
+                    let distance=startArray[startArray.length-1]-startArray[0];
+                    let endTimeDistance=parseInt((autotime-startArray[0])/distance)*distance;
+                    let endTime="";
+                    for(let i=0;i<startArray.length-1;i++){
+                        endTime+=parseInt(parseInt(startArray[i])+parseInt(endTimeDistance));
+                        endTime+="/";
                     }
 
-                    tpAll[i].setAttribute('f-time', tottar+re);
-                    tpAll[i].setAttribute('f-pos',  tpAll[i].getAttribute('f-pos')+"/"+tpAll[i].getAttribute('f-pos'));
+                    endTime+=parseInt(parseInt(startArray[startArray.length-1])+parseInt(endTimeDistance));
+                    tpAll[i].setAttribute(TIME_ART,endTime);
 
                 } else {
                     hideElement(tpAll[i]);
-                    //tpAll[i].style.opacity = '0';
+
+                }
+            } else if (autotime <= timeto) {
+                //返回处理
+                if (tpAll[i].getAttribute(TP_SAVE_ART) == "true") {
+
+                    hideElement(tpAll[i]);
+                    //tpAll[i].style.opacity = '1';
+                } else if (tpAll[i].getAttribute(TP_SAVE_ART) == "auto") {
+                    ///循环动画处理
+                    
+                    let startTime=tpAll[i].getAttribute("f-start-time");
+                    
+
+                    let startArray=startTime.split("/");
+
+                    if(autotime<startArray[0]){
+                        hideElement(tpAll[i]);
+                        return;
+                    }
+
+                    let distance=startArray[startArray.length-1]-startArray[0];
+                    
+                    let endTimeDistance=parseInt((autotime-startArray[0])/distance)*distance;
+                    let endTime="";
+                    for(let i=0;i<startArray.length-1;i++){
+                        endTime+=parseInt(parseInt(startArray[i])+parseInt(endTimeDistance));
+                        endTime+="/";
+                    }
+                    endTime+=parseInt(parseInt(startArray[startArray.length-1])+parseInt(endTimeDistance));
+                    tpAll[i].setAttribute(TIME_ART,endTime);
+
+                } else {
+                    hideElement(tpAll[i]);
+
                 }
             } else {
                 hideElement(tpAll[i]);
-                //tpAll[i].style.opacity = '0';
+
             }
         }
     }
     //Auto渲染
     window.setInterval(function () {
+        
+        ///配置
+        var autoAll=document.getElementsByTagName(AUTO_TAG);
+
+        ///时间轴
         autotime += 10;
-
-        var tpAll = document.getElementsByClassName('tpauto');
-        let i = 0;
-
         //渲染
-        render(tpAll,autotime);
+        render(autoAll,autotime);
         
     }, 500 / autospeed)
     //Key渲染
     window.onkeydown = function (e) {
 
         ///配置
-        var tpAll = document.getElementsByClassName('tp');
-        let i = 0;
+        var autoAll=document.getElementsByTagName(TP_TAG);
+
         
         //时间轴
         if (e.key == "ArrowDown" || e.key == "ArrowRight") {
@@ -184,7 +194,7 @@
         }
 
         //渲染
-        render(tpAll,ftime);
+        render(autoAll,ftime);
 
     }
 
@@ -192,13 +202,14 @@
     window.onmousewheel = function (e) {
 
         ///配置
-        var tpAll = document.getElementsByClassName('tp');
-        let i = 0;
+        var autoAll=document.getElementsByTagName(TP_TAG);
 
         //时间轴
         ftime += speed * e.deltaY / 10;
         //渲染
-        render(tpAll,ftime);
+        render(autoAll,ftime);
 
     }
+
+    window
 })(document);
