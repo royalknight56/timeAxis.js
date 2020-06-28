@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    /* *{
+        transition: all 0.1s;
+    } */
+    body{
+        background-color: black;
+    }
+</style>
+<body>
+    <tp f-ifsave="auto" f-time="0/400" f-value="-30/120" f-bind="left,$%" style="position: relative;top:200px;font-size: 50px;color: aliceblue;">
+        0101010101111001011010
+    </tp>
+    <autotp f-ifsave="auto" f-time="0/400" f-value="-30/120" f-bind="left,$%" style="position: relative;top:200px;font-size: 50px;color: aliceblue;" f-opt="rand">
+        0101010101111001011010
+    </autotp>
+    <autotp f-ifsave="auto" f-time="0/400" f-value="-0/170" f-bind="left,$%" style="position: relative;top:200px;font-size: 50px;color: aliceblue;" f-opt="rand">
+        0101010101111001011010
+    </autotp>
+    <autotp f-ifsave="auto" f-time="0/400" f-value="-30/90" f-bind="left,$%" style="position: relative;top:200px;font-size: 50px;color: aliceblue;" f-opt="rand">
+        0101010101111001011010
+    </autotp>
+    <autotp f-ifsave="auto" f-time="0/400" f-value="-10/110" f-bind="left,$%" style="position: relative;top:200px;font-size: 50px;color: aliceblue;" f-opt="rand">
+        0101010101111001011010
+    </autotp>
+    <autotp f-ifsave="auto" f-time="0/100/400" f-value="-30/10/170" f-bind="left,$%" style="position: relative;top:200px;font-size: 50px;color: aliceblue;" f-opt="rand">
+        0101010101111001011010
+    </autotp>
+    <autotp f-ifsave="auto" f-time="0/400" f-value="-30/120" f-bind="left,$%" style="position: relative;top:200px;font-size: 50px;color: aliceblue;" f-opt="rand">
+        0101010101111001011010
+    </autotp>
+
+</body>
+<script src="sjl.js"></script>
+<script>
+    let tim=new timeJS({
+        speed:1,
+        autoSpeed:10,
+        delay:0.1,
+    })
+    tim.bind({
+        rand:function(pos){
+            //console.log(Math.random()*100)
+            return Math.random()*100-50;
+        },
+
+    })
+    tim.stop();
+    tim.start();
+</script>
+</html>
