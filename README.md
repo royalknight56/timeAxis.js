@@ -7,6 +7,23 @@ make html move
 ```
 <script src="sjl.js"></script>
 ```
+在script中创建新的timeJS类的对象
+
+构造函数中传入配置object
+
+参数分别有
+
+speed控制手动速度
+
+autoSpeed控制自动播放速度
+
+没有这个属性的话脚本会自动设置为1
+```
+let tim=new timeJS({
+        speed:1,
+        autoSpeed:10
+    })
+```
 
 ## 使用
 
@@ -76,12 +93,6 @@ f-time="600/700/1000">
    ```
 在上个例子中，我们绑定了transform,rotate($deg) 会使当前元素旋转
 
-## 全局配置
-请在html中加入以下id的元素（tp-conf），设置全局控制属性 可以控制speed（手动播放速度）或者autospeed（自动播放tpauto速度）
-```
-<div id="tp-conf" speed="6" autospeed="20"></div>
-```
-没有这个属性的话脚本会自动设置为1
 
 ## 控制
 本脚本的帧主要通过[右键]，[下键]，[滑轮向下]来前向播放
@@ -114,6 +125,61 @@ f-time="600/700/1000" style="font-size: 30px;">
 当前元素在时间之外会消失
 true：当前元素在时间之后会保留
 auto：当前元素会永远循环播放
+
+
+## 管道
+
+f-opt可以使用管道
+
+在下面的例子中，使用了名为rand的管道
+
+管道使得所有的值通过这个管道函数的变化后再渲染出来
+
+
+```
+<autotp 
+f-ifsave="auto" 
+f-time="0/400" 
+f-value="-30/120" 
+f-bind="left,$%" 
+style="position: relative;top:200px;font-size: 50px;color: aliceblue;" 
+f-opt="rand">
+        0101010101111001011010
+    </autotp>
+```
+
+定义管道函数需要使用timeJS类中的bind方法
+
+bind方法参数：object{管道名:管道函数function}
+
+在下面的例子中定义的rand会使得所有值随机
+
+```
+tim.bind({
+        rand:function(pos){
+            return Math.random()*100-50;
+        },
+    })
+```
+
+## timeJS中的方法
+
+### stop() start()
+
+stop会停止播放，只有start之后才会继续进行，
+
+### frozen() unFrozen()
+
+frozen和stop都会停止播放，不同之处在于frozen在画面静止之后，元素值的变化还会继续进行
+
+# 更多
+
+## 期待的特性
+
+timeCtrl(num,fun)方法
+
+指定在num的时间时，执行fun方法
+
 
 ## 未来
 

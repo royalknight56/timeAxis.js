@@ -91,7 +91,9 @@ class timeJS {
 
                 let bindarr;
                 if (tpAll.getAttribute(TP_BIND_ART) == null) {
-                    bindarr = ["left,$px", "top,$px"]
+                    //bindarr = ["left,$px", "top,$px"]
+                    console.log("%c[WARN]---one element's bind didn't initialization-------", "color: yellow;background-color:black;font-size:15px");
+                
                 } else {
                     bindarr = tpAll.getAttribute(TP_BIND_ART).split('/');
                 }
@@ -224,8 +226,7 @@ class timeJS {
         //Wheel事件
         window.onmousewheel = function (e) {
             var autoAll = document.getElementsByTagName(TP_TAG);
-            console.log(speed)
-            callRender(autoAll, speed,0);
+            callRender(autoAll, e.deltaY/Math.abs(e.deltaY)*speed,0);
         }
     }
     bind(opt) {
