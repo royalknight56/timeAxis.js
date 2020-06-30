@@ -168,18 +168,24 @@ tim.bind({
 
 stop会停止播放，只有start之后才会继续进行，
 
-### frozen() unFrozen()
-
-frozen和stop都会停止播放，不同之处在于frozen在画面静止之后，元素值的变化还会继续进行
-
-# 更多
-
-## 期待的特性
+### timeCtrl方法
 
 timeCtrl(num,fun)方法
 
 指定在num的时间时，执行fun方法
 
+### setTime方法
+
+setTime(num)方法
+
+重新设定
+
+
+# 更多
+
+## 期待的特性
+
+### //timeCtrl 已实现
 
 ## 未来
 

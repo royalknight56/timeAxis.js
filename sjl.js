@@ -30,9 +30,51 @@ class timeJS {
             hideElement(tpAuto[i]);
             render(tpAuto[i], 0);
         }
-        window.timeJS.ftime=0;
-        window.timeJS.ftime=0;
-        var autotime = 0;
+        window.timeJS.manTime = 0;
+        window.timeJS = new Proxy({ manTime: 0,autoTime:0,ifStop:false,timeCtrl:[]}, {
+            get: function (target, key, receiver) {
+                return Reflect.get(target, key, receiver)
+            },
+            set: function (target, propKey, value, receiver) {
+                if (propKey == "manTime") {
+                    if(target[propKey]>value){
+                        for(let i=target[propKey];i>value;i--){
+                            if(window.timeJS.timeCtrl[i]!=undefined){
+                                window.timeJS.timeCtrl[i].fun();
+                                if(window.timeJS.timeCtrl[i].ifonce){
+                                    window.timeJS.timeCtrl[i]=undefined;
+                                }
+                            }
+                        }
+                    }else{
+                        for(let i=target[propKey];i<value;i++){
+                            if(window.timeJS.timeCtrl[i]!=undefined){
+                                window.timeJS.timeCtrl[i].fun();
+                                if(window.timeJS.timeCtrl[i].ifonce){
+                                    window.timeJS.timeCtrl[i]=undefined;
+                                }
+                            }
+                        }
+                    }
+                    
+                }
+                
+                if (propKey == "manTime") {
+                    let manAll = document.getElementsByTagName(TP_TAG);
+                    for (let i = 0; i < manAll.length; i++) {
+                        render(manAll[i], value);
+                    }
+                }else if(propKey=='autoTime'){
+                    let autoAll = document.getElementsByTagName(AUTO_TAG);
+                    for (let i = 0; i < autoAll.length; i++) {
+                        render(autoAll[i], value);
+                    }
+                }
+                return Reflect.set(target, propKey, value, receiver);
+            }
+        })
+
+        
         var autospeed = 1;
         var speed = 1;
 
@@ -61,13 +103,13 @@ class timeJS {
             e.style.opacity = '1';
         }
         //渲染core
-        function render(tpAll, autotime) {
+        function render(tpAll, autoTime) {
             ///渲染
             //for (let i = 0; i < tpAll.length; i++) {
             let timearr = tpAll.getAttribute(TIME_ART).split("/");
             var j = 0;
             for (j = 0; j < timearr.length; j++) {
-                if (autotime >= timearr[j] && autotime <= timearr[j + 1]) {
+                if (autoTime >= timearr[j] && autoTime <= timearr[j + 1]) {
                     break;
                 }
             }
@@ -81,7 +123,7 @@ class timeJS {
                 timeto = timearr[j + 1];
             }
 
-            if (autotime >= timefrom && autotime <= timeto) {
+            if (autoTime >= timefrom && autoTime <= timeto) {
                 //显示时渲染
                 showElement(tpAll);
 
@@ -93,7 +135,7 @@ class timeJS {
                 if (tpAll.getAttribute(TP_BIND_ART) == null) {
                     //bindarr = ["left,$px", "top,$px"]
                     console.log("%c[WARN]---one element's bind didn't initialization-------", "color: yellow;background-color:black;font-size:15px");
-                
+
                 } else {
                     bindarr = tpAll.getAttribute(TP_BIND_ART).split('/');
                 }
@@ -101,7 +143,7 @@ class timeJS {
                 for (k = 0; k < bindarr.length; k++) {
 
                     let filler = (parseInt(posfrom.split(",")[k]) +
-                        (autotime - timefrom) * (posto.split(",")[k] - posfrom.split(",")[k]) /
+                        (autoTime - timefrom) * (posto.split(",")[k] - posfrom.split(",")[k]) /
                         (timeto - timefrom));
                     //filler为计算出的值
 
@@ -118,7 +160,7 @@ class timeJS {
 
                 }
 
-            } else if (autotime >= timeto) {
+            } else if (autoTime >= timeto) {
                 //结束处理
                 if (tpAll.getAttribute(TP_SAVE_ART) == "true") {
 
@@ -128,7 +170,7 @@ class timeJS {
                     let startTime = tpAll.getAttribute("f-start-time");
                     let startArray = startTime.split("/");
                     let distance = startArray[startArray.length - 1] - startArray[0];
-                    let endTimeDistance = parseInt((autotime - startArray[0]) / distance) * distance;
+                    let endTimeDistance = parseInt((autoTime - startArray[0]) / distance) * distance;
                     let endTime = "";
                     for (let i = 0; i < startArray.length - 1; i++) {
                         endTime += parseInt(parseInt(startArray[i]) + parseInt(endTimeDistance));
@@ -142,7 +184,7 @@ class timeJS {
                     hideElement(tpAll);
 
                 }
-            } else if (autotime <= timeto) {
+            } else if (autoTime <= timeto) {
                 //返回处理
                 if (tpAll.getAttribute(TP_SAVE_ART) == "true") {
 
@@ -156,14 +198,14 @@ class timeJS {
 
                     let startArray = startTime.split("/");
 
-                    if (autotime < startArray[0]) {
+                    if (autoTime < startArray[0]) {
                         hideElement(tpAll);
                         return;
                     }
 
                     let distance = startArray[startArray.length - 1] - startArray[0];
 
-                    let endTimeDistance = parseInt((autotime - startArray[0]) / distance) * distance;
+                    let endTimeDistance = parseInt((autoTime - startArray[0]) / distance) * distance;
                     let endTime = "";
                     for (let i = 0; i < startArray.length - 1; i++) {
                         endTime += parseInt(parseInt(startArray[i]) + parseInt(endTimeDistance));
@@ -189,44 +231,33 @@ class timeJS {
 
         //Auto渲染
         window.setInterval(function () {
-            ///配置
-            var autoAll = document.getElementsByTagName(AUTO_TAG);
-            callRender(autoAll, autospeed,1);
+            callRender(autospeed, 1);
         }, 100)
         //渲染
-        function callRender(autoAll, num, type) {
-            ///配置
-            //var autoAll = document.getElementsByTagName(TP_TAG);
+        function callRender(num, type) {
             //时间轴
             if (window.timeJS.ifStop) {/////判断是否暂停
+
             } else {
                 if (type == 0) {//非自动
-                    window.timeJS.ftime = window.timeJS.ftime+num;
+                    window.timeJS.manTime = window.timeJS.manTime + num;
                 } else if (type == 1) {//自动
-                    autotime = autotime+num;
-                }
-                //渲染
-                if (window.timeJS.ifFrozen) {///判断是否冻结
-                } else {
-                    for (let i = 0; i < autoAll.length; i++) {
-                        render(autoAll[i], window.timeJS.ftime);
-                    }
+                    window.timeJS.autoTime = window.timeJS.autoTime + num;
                 }
             }
         }
         //Key事件
         window.addEventListener("keydown", function (e) {
-            var autoAll = document.getElementsByTagName(TP_TAG);
+
             if (e.key == "ArrowDown" || e.key == "ArrowRight") {
-                callRender(autoAll, speed,0);
+                callRender( speed, 0);
             } else if (e.key == "ArrowUp" || e.key == "ArrowLeft") {
-                callRender(autoAll, -speed,0);
+                callRender(-speed, 0);
             }
         })
         //Wheel事件
         window.onmousewheel = function (e) {
-            var autoAll = document.getElementsByTagName(TP_TAG);
-            callRender(autoAll, e.deltaY/Math.abs(e.deltaY)*speed,0);
+            callRender(e.deltaY / Math.abs(e.deltaY) * speed, 0);
         }
     }
     bind(opt) {
@@ -243,12 +274,10 @@ class timeJS {
     start() {
         window.timeJS.ifStop = false;
     }
-    frozen() {
-        window.timeJS.ifFrozen = true;
+    bindCtrl(num, fun,ifonce) {
+        window.timeJS.timeCtrl[num]={fun,ifonce};
     }
-    unFrozen() {
-        window.timeJS.ifFrozen = false;
-    }
-    timeCtrl(num, fun) {
+    setTime(num){
+        window.timeJS.manTime=num;
     }
 }
