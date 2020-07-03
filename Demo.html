@@ -1,63 +1,100 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
 <style>
-    *{
+    * {
         transition: all 0.1s;
     }
-    body{
+
+    body {
         background-color: black;
         overflow: hidden;
     }
+
+    .t3d {
+        background-color: red;
+        transform: rotateX(40deg);
+    }
 </style>
+
 <body>
-    <tp f-time="0/400" f-value="-30/120" f-bind="top,$%" style="position: absolute;font-size: 50px;color: aliceblue;">
-        0101010101111001011010<br>
-        0101010101111001011010<br>
-        0101010101111001011010<br>
-        0101010101111001011010<br>
-        0101010101111001011010<br>
-        0101010101111001011010<br>
-        0101010101111001011010<br>
-        0101010101111001011010<br>
-        0101010101111001011010<br>
-        0101010101111001011010<br>
-        0101010101111001011010<br>
+    <tp f-time="0/20/60/80" f-value="-30/50/50/120" f-bind="top,$%"
+        style="position: absolute;font-size: 50px;color: aliceblue;">
         0101010101111001011010<br>
     </tp>
-    <tp f-time="0/400" f-value="120/-30" f-bind="top,$%" style="position: absolute;left:50%;font-size: 50px;color: aliceblue;">
+    <tp f-time="0/20/60/80" f-value="120/50/50/-30" f-bind="top,$%"
+        style="position: absolute;left:50%;font-size: 50px;color: aliceblue;">
         0101010101111001011010<br>
-        0101010101111001011010<br>
-        0101010101111001011010<br>
-        0101010101111001011010<br>
-        0101010101111001011010<br>
-        0101010101111001011010<br>
-        0101010101111001011010<br>
-        0101010101111001011010<br>
-        0101010101111001011010<br>
-        0101010101111001011010<br>
-        0101010101111001011010<br>
+    </tp>
+    <tp f-time="20/60" f-value="-30/120" f-bind="top,$%"
+        style="position: absolute;left:50%;font-size: 50px;color: aliceblue;">
         0101010101111001011010<br>
     </tp>
 
+    <!-- <autotp style="perspective:150px;display: block;" class="t3d"
+    f-time="20/100" f-value="150/0" f-bind="perspective,$px" f-ifsave="auto">
+        <autotp class="t3d"
+            style="position: absolute;left:50%;font-size: 50px;color: aliceblue;transform: translateX(45deg);"
+            f-time="20/100" f-value="-100/1000" f-bind="left,$px" f-ifsave="auto">
+            一般通过
+        </autotp>
+    </autotp> -->
+
+    <!-- <autotp style="perspective:150px;display: block;" class="t3d"
+    f-time="20/100/200" f-value="150/0/10000" f-bind="perspective,$px;" f-ifsave="auto">
+        <div class="t3d"
+            style="position: absolute;left:50%;font-size: 50px;color: aliceblue;transform: translateX(45deg);">
+            透视变化
+        </div>
+    </autotp> -->
+
+    <autotp style="perspective:150px;display: block;" class="t3d"
+    f-time="20/100/200"  f-bind="perspective,$px;">
+        <div class="t3d"
+            style="position: absolute;left:50%;font-size: 50px;color: aliceblue;transform: translateX(45deg);">
+            透视变化
+        </div>
+    </autotp>
+    <tp style="perspective:150px;left: 0;top: 0;display: block;"
+    f-time="20/100" f-value="0/100" f-bind="left,$px">
+        <tp class="t3d"
+            style="position: absolute;left:50%;font-size: 50px;color: aliceblue;transform: translateX(45deg);"
+            f-time="20/100" f-value="-100/1000" f-bind="left,$px" f-opt="rand">
+            随机管道
+        </tp>
+    </tp>
+    
 </body>
-<script src="sjl.js"></script>
+<script src="tao.js"></script>
 <script>
-    let tim=new timeJS({
-        speed:10,
-        autoSpeed:10,
-        delay:0.1,
+    let tim = new timeJS({
+        speed: 1,
+        autoSpeed: 1,
+        delay: 0.1,
     })
     tim.bind({
-        rand:function(pos){
-            return Math.random()*100-50;
-        },
+        rand:function(val){
+        return Math.random()*val
+        }
     })
-    tim.stop();
-    tim.start();
+    tim.bindCtrl(Array.from(Array(100), (v,k) =>k), function(){
+        console.log(tim.getTime());
+    }, false)
+
+    window.setTimeout(function(){
+        console.log("Demo网页测试stop")
+        tim.stop()
+    },2000)
+    window.setTimeout(function(){
+        console.log("Demo网页测试start")
+        tim.start()
+    },4000)
+
 </script>
+
 </html>
