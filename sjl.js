@@ -4,8 +4,8 @@
  * @Autor: RoyalKnight
  * @Date: 2020-07-01 09:45:44
  * @LastEditors: RoyalKnight
- * @LastEditTime: 2020-07-03 18:05:57
- */ 
+ * @LastEditTime: 2020-07-09 13:49:43
+ */
 
 class timeJS {
 
@@ -26,6 +26,7 @@ class timeJS {
         this.ifStop = false;
 
         this.timeCtrl = [];
+        this.autoTimeCtrl = [];
         this.speed = 1;
         this.autoSpeed = 1;
 
@@ -116,11 +117,46 @@ class timeJS {
 
         ///渲染
         let timeArt = moveElement.getAttribute(this.TP_TIME_ART);
-        if (timeArt) {
+        if (timeArt) {//有time属性
+            let valueArt = moveElement.getAttribute(this.TP_VALUE_ART);
+            if (valueArt) {
+                
+            } else {
+                console.log("%c[WARN]---no f-value-------", "color: yellow;background-color:black;font-size:15px")
+                return
+            }
+        } else {//无time属性
 
-        } else {
+            console.log("%c[WARN]---no f-time-------", "color: yellow;background-color:black;font-size:15px")
+            let valueArt = moveElement.getAttribute(this.TP_VALUE_ART);
+            if (valueArt) {//无time属性有value属性
+                //管道
+                if (moveElement.getAttribute(this.TP_BIND_OPT_ART) != null) {
+                    let funArry = moveElement.getAttribute(this.TP_BIND_OPT_ART).split("/");
+                    let ifmark=0;
+                    for (let i = 0; i < funArry.length; i++) {
+                        let values=moveElement.getAttribute(this.TP_VALUE_ART).split('/');
+                        
+                        for(let j=0;j<values.length;j++){
+                            if(this[funArry[i]]){
+                                this[funArry[i]](values[j])
+                                ifmark=1;
+                            }else{
 
-            //console.log("%c[WARN]---no f-time-------", "color: yellow;background-color:black;font-size:15px")
+                            }
+                            //this[funArry[i]]?.(values[j]);
+                        }
+                    }
+                    if(ifmark==1){
+                        moveElement.parentNode.removeChild(moveElement)
+                    }
+                    this.hideElement(moveElement)
+                    //moveElement.parentNode.removeChild(moveElement)
+                }
+            } else {
+                console.log("%c[WARN]---no f-value-------", "color: yellow;background-color:black;font-size:15px")
+                return
+            }
             return
         }
         let timearr = timeArt.split("/");
@@ -144,50 +180,55 @@ class timeJS {
             //显示时渲染
             this.showElement(moveElement);
 
-            let valueArt = moveElement.getAttribute(this.TP_VALUE_ART);
-            if (valueArt) {
-
-            } else {
-                //console.log("%c[WARN]---no f-value-------", "color: yellow;background-color:black;font-size:15px")
-                return
-            }
-
             let posfrom = moveElement.getAttribute(this.TP_VALUE_ART).split('/')[j];
             let posto = moveElement.getAttribute(this.TP_VALUE_ART).split('/')[j + 1];
 
             let bindarr;
             if (moveElement.getAttribute(this.TP_BIND_ART) == null) {
                 console.log("%c[WARN]---one element's bind didn't initialization-------", "color: yellow;background-color:black;font-size:15px");
+                let filler = (parseInt(posfrom) +
+                        (autoTime - timefrom) * (posto - posfrom) /
+                        (timeto - timefrom));
+                    //filler为计算出的值
 
+                    //管道
+                    if (moveElement.getAttribute(this.TP_BIND_OPT_ART) != null) {
+                        let funArry = moveElement.getAttribute(this.TP_BIND_OPT_ART).split("/");
+
+                        for (let i = 0; i < funArry.length; i++) {
+                            filler = this[funArry[i]]?.(filler);
+                        }
+                    }
             } else {
                 bindarr = moveElement.getAttribute(this.TP_BIND_ART).split('/');
-            }
-            var k = 0;
-            for (k = 0; k < bindarr.length; k++) {
+                var k = 0;
+                for (k = 0; k < bindarr.length; k++) {
 
-                let filler = (parseInt(posfrom.split(",")[k]) +
-                    (autoTime - timefrom) * (posto.split(",")[k] - posfrom.split(",")[k]) /
-                    (timeto - timefrom));
-                //filler为计算出的值
+                    let filler = (parseInt(posfrom.split(",")[k]) +
+                        (autoTime - timefrom) * (posto.split(",")[k] - posfrom.split(",")[k]) /
+                        (timeto - timefrom));
+                    //filler为计算出的值
 
-                //管道
-                if (moveElement.getAttribute(this.TP_BIND_OPT_ART) != null) {
-                    let funArry = moveElement.getAttribute(this.TP_BIND_OPT_ART).split("/");
+                    //管道
+                    if (moveElement.getAttribute(this.TP_BIND_OPT_ART) != null) {
+                        let funArry = moveElement.getAttribute(this.TP_BIND_OPT_ART).split("/");
 
-                    for (let i = 0; i < funArry.length; i++) {
-                        filler = this[funArry[i]]?.(filler);
+                        for (let i = 0; i < funArry.length; i++) {
+                            filler = this[funArry[i]]?.(filler);
+                        }
                     }
-                }
-                let bindArt = bindarr[k].split(",")[0];
-                let bindVal = bindarr[k].split(",")[1];
-                if (bindVal[bindVal.length - 1] == ";") {
-                    bindVal = bindVal.slice(0, bindVal.length - 1)
-                }
-                moveElement.style[bindArt] = bindVal.replace("$", filler);//将$替换为值
+                    let bindArt = bindarr[k].split(",")[0];
+                    let bindVal = bindarr[k].split(",")[1];
+                    if (bindVal[bindVal.length - 1] == ";") {
+                        bindVal = bindVal.slice(0, bindVal.length - 1)
+                    }
+                    moveElement.style[bindArt] = bindVal.replace("$", filler);//将$替换为值
 
+                }
             }
 
-        } else if (autoTime >= timeto) {
+
+        } else if (autoTime > timeto) {
             //结束处理
             if (moveElement.getAttribute(this.TP_SAVE_ART) == "true") {
 
@@ -287,7 +328,11 @@ class timeJS {
         for (let i = 0; i < num.length; i++) {
             this.timeCtrl[num[i]] = { fun, ifonce };
         }
-
+    }
+    bindAutoCtrl(num, fun, ifonce) {
+        for (let i = 0; i < num.length; i++) {
+            this.autoTimeCtrl[num[i]] = { fun, ifonce };
+        }
     }
     setTime(num) {
         this.manTime = num;
@@ -295,13 +340,20 @@ class timeJS {
     getTime() {
         return this.manTime;
     }
+    setAutoTime(num) {
+        this.autoTime = num;
+    }
+    getAutoTime() {
+        return this.autoTime;
+    }
     get manTime() {
 
         return this._manTime;
     }
     set manTime(value) {
+        let i = this._manTime;
         if (this._manTime > value) {
-            for (let i = this._manTime; i > value; i--) {
+            for (i--; i >= value; i--) {
                 if (this.timeCtrl[i] != undefined) {
                     this.timeCtrl[i].fun();
                     if (this.timeCtrl[i].ifonce) {
@@ -309,8 +361,8 @@ class timeJS {
                     }
                 }
             }
-        } else {
-            for (let i = this._manTime; i < value; i++) {
+        } else if (this._manTime < value) {
+            for (i++; i <= value; i++) {
                 if (this.timeCtrl[i] != undefined) {
                     this.timeCtrl[i].fun();
                     if (this.timeCtrl[i].ifonce) {
@@ -330,10 +382,31 @@ class timeJS {
         return this._autoTime;
     }
     set autoTime(value) {
+        let i = this._autoTime;
+        if (this._autoTime > value) {
+            for (i--; i >= value; i--) {
+                if (this.autoTimeCtrl[i] != undefined) {
+                    this.autoTimeCtrl[i].fun();
+                    if (this.autoTimeCtrl[i].ifonce) {
+                        this.autoTimeCtrl[i] = undefined;
+                    }
+                }
+            }
+        } else if (this._autoTime < value) {
+            for (i++; i <= value; i++) {
+                if (this.autoTimeCtrl[i] != undefined) {
+                    this.autoTimeCtrl[i].fun();
+                    if (this.autoTimeCtrl[i].ifonce) {
+                        this.autoTimeCtrl[i] = undefined;
+                    }
+                }
+            }
+        }
+        this._autoTime = value;
         let autoAll = document.getElementsByTagName(this.AUTO_TAG);
         for (let i = 0; i < autoAll.length; i++) {
             this.render(autoAll[i], value);
         }
-        this._autoTime = value;
+
     }
 }

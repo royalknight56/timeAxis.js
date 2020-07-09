@@ -1,3 +1,11 @@
+<!--
+ * @Description: 
+ * @Version: 2.0
+ * @Autor: RoyalKnight
+ * @Date: 2020-06-28 09:16:50
+ * @LastEditors: RoyalKnight
+ * @LastEditTime: 2020-07-09 13:48:15
+--> 
 <!DOCTYPE html>
 <html lang="zh-CN">
 
@@ -35,26 +43,8 @@
         style="position: absolute;left:50%;font-size: 50px;color: aliceblue;">
         0101010101111001011010<br>
     </tp>
-
-    <!-- <autotp style="perspective:150px;display: block;" class="t3d"
-    f-time="20/100" f-value="150/0" f-bind="perspective,$px" f-ifsave="auto">
-        <autotp class="t3d"
-            style="position: absolute;left:50%;font-size: 50px;color: aliceblue;transform: translateX(45deg);"
-            f-time="20/100" f-value="-100/1000" f-bind="left,$px" f-ifsave="auto">
-            一般通过
-        </autotp>
-    </autotp> -->
-
-    <!-- <autotp style="perspective:150px;display: block;" class="t3d"
-    f-time="20/100/200" f-value="150/0/10000" f-bind="perspective,$px;" f-ifsave="auto">
-        <div class="t3d"
-            style="position: absolute;left:50%;font-size: 50px;color: aliceblue;transform: translateX(45deg);">
-            透视变化
-        </div>
-    </autotp> -->
-
     <autotp style="perspective:150px;display: block;" class="t3d"
-    f-time="20/100/200"  f-bind="perspective,$px;">
+    f-time="20/100/200" f-value="150/0/10000" f-bind="perspective,$px;" f-ifsave="auto">
         <div class="t3d"
             style="position: absolute;left:50%;font-size: 50px;color: aliceblue;transform: translateX(45deg);">
             透视变化
@@ -70,7 +60,7 @@
     </tp>
     
 </body>
-<script src="tao.js"></script>
+<script src="sjl.js"></script>
 <script>
     let tim = new timeJS({
         speed: 1,
@@ -89,7 +79,7 @@
     window.setTimeout(function(){
         console.log("Demo网页测试stop")
         tim.stop()
-    },2000)
+    },1900)
     window.setTimeout(function(){
         console.log("Demo网页测试start")
         tim.start()

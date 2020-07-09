@@ -1,0 +1,80 @@
+<!--
+ * @Description: 
+ * @Version: 2.0
+ * @Autor: RoyalKnight
+ * @Date: 2020-06-28 09:16:50
+ * @LastEditors: RoyalKnight
+ * @LastEditTime: 2020-07-09 13:46:56
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    * {
+        transition: all 0.1s;
+    }
+
+    body {
+        background-color: black;
+        overflow: hidden;
+    }
+
+    .t3d {
+        background-color: red;
+        transform: rotateX(40deg);
+    }
+
+    .ppt {
+        color: aliceblue;
+        position: absolute;
+        text-align: center;
+        top: 40%;
+        font-size: 60px;
+    }
+</style>
+
+<body>
+    <autotp  f-value="100/200/300"  f-opt="stopPPT">
+        <!-- ppt控制组件，使用管道机制 -->
+    </autotp>
+    
+    <autotp class="ppt" f-time="1/100" f-value="0/1" f-bind="opacity,$;" f-ifsave="false">
+        幻灯片1
+    </autotp>
+    <autotp class="ppt" f-time="101/200" f-value="0/1" f-bind="opacity,$;" f-ifsave="false">
+        幻灯片2
+    </autotp>
+    <autotp class="ppt" f-time="201/300" f-value="0/1" f-bind="opacity,$;" f-ifsave="false">
+        幻灯片3
+    </autotp>
+
+</body>
+<script src="sjl.js"></script>
+<script>
+    let tim = new timeJS({
+        speed: 1,
+        autoSpeed: 10,
+        delay: 0.1,
+    })
+    tim.bind({
+        stopPPT: function (val) {
+            console.log('opt'+val)
+            tim.bindAutoCtrl([val], function () {
+                tim.stop();
+                console.log("stop");
+            }, false)
+            return
+        }
+    })
+    window.addEventListener("mousedown", function () {
+        tim.start();
+    })
+
+</script>
+
+</html>
