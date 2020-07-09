@@ -4,7 +4,7 @@
  * @Autor: RoyalKnight
  * @Date: 2020-06-28 09:16:50
  * @LastEditors: RoyalKnight
- * @LastEditTime: 2020-07-09 13:46:56
+ * @LastEditTime: 2020-07-09 17:56:21
 -->
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -39,18 +39,31 @@
 </style>
 
 <body>
-    <autotp  f-value="100/200/300"  f-opt="stopPPT">
+    <autotp f-value="100/200/300/400/500/600" f-opt="stopPPT">
         <!-- ppt控制组件，使用管道机制 -->
     </autotp>
-    
-    <autotp class="ppt" f-time="1/100" f-value="0/1" f-bind="opacity,$;" f-ifsave="false">
-        幻灯片1
+    <autotp class="ppt" f-time="-100/0" f-value="0/1" f-bind="opacity,$;" f-ifsave="false">
+        幻灯片已退出
     </autotp>
-    <autotp class="ppt" f-time="101/200" f-value="0/1" f-bind="opacity,$;" f-ifsave="false">
+    <autotp class="ppt" f-time="1/100" f-value="0/1" f-bind="opacity,$;" f-ifsave="false" f-opt="stopPPT">
+        幻灯片1 （F11进入全屏）
+    </autotp>
+
+    <autotp class="ppt" f-time="101/200" f-value="0/1" f-bind="opacity,$;" f-ifsave="false" f-opt="stopPPT">
         幻灯片2
     </autotp>
-    <autotp class="ppt" f-time="201/300" f-value="0/1" f-bind="opacity,$;" f-ifsave="false">
+    <autotp class="ppt" f-time="201/300" f-value="0/1" f-bind="opacity,$;" f-ifsave="false" f-opt="stopPPT">
         幻灯片3
+    </autotp>
+    <autotp class="ppt" f-time="301/400" f-value="0/1" f-bind="opacity,$;" f-ifsave="false" f-opt="stopPPT">
+        幻灯片4
+    </autotp>
+    <autotp class="ppt" f-time="401/500" f-value="0/1" f-bind="opacity,$;" f-ifsave="false" f-opt="stopPPT">
+        幻灯片5
+    </autotp>
+
+    <autotp class="ppt" f-time="501/600" f-value="0/1" f-bind="opacity,$;" f-ifsave="false" f-opt="stopPPT">
+        幻灯片已结束 （F11退出全屏）
     </autotp>
 
 </body>
@@ -60,10 +73,10 @@
         speed: 1,
         autoSpeed: 10,
         delay: 0.1,
+        death: 600,
     })
     tim.bind({
         stopPPT: function (val) {
-            console.log('opt'+val)
             tim.bindAutoCtrl([val], function () {
                 tim.stop();
                 console.log("stop");
@@ -73,6 +86,15 @@
     })
     window.addEventListener("mousedown", function () {
         tim.start();
+    })
+    window.addEventListener("mousewheel", function (e) {//添加滑动事件，可以回放与正放
+        if (e.deltaY < 0) {
+            tim.autoSpeed = -10
+            tim.start();
+        } else {
+            tim.autoSpeed = 10
+            tim.start();
+        }
     })
 
 </script>

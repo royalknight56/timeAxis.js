@@ -25,6 +25,13 @@ let tim=new timeJS({
     })
 ```
 
+#### 其他配置选项
+
+##### death和birth
+规定了全局的开始时间和结束时间
+
+动画不会播放到这个时间之外
+
 ## 使用
 
 使用tp标签
@@ -162,23 +169,45 @@ tim.bind({
     })
 ```
 
+如果一个元素没有设定f-time f-bind
+
+而设定了f-value和f-opt
+
+则他会在页面执行时将value中的值全部应用到opt中
+
+可以参见demoPPT中的播放控制组件的用法
+
 ## timeJS中的方法
 
 ### stop() start()
 
 stop会停止播放，只有start之后才会继续进行，
 
-### timeCtrl方法
+### bindCtrl() bindAutoCtrl()方法
 
-timeCtrl(num,fun)方法
+用例：
+以下代码在300的autoTime（自动播放时间值）时会调用函数，false指定他是会重复调用的
 
-指定在num的时间时，执行fun方法
+```
+tim.bindAutoCtrl(300, function () {
+                tim.stop();
+                console.log("stop");
+            }, false)
+```
+bindCtrl会绑定手动播放时间值
 
-### setTime方法
+
+### setTime() getTime() setAutoTime() getAutoTime()方法
 
 setTime(num)方法
 
-重新设定
+重新设定手动播放时间值，会渲染出设定值的画面
+
+getTime()方法
+
+会取得手动播放时间值
+
+auto类别的同理
 
 
 # 更多
@@ -203,3 +232,7 @@ setTime(num)方法
 一份简单的个人简历
 
 [timejs-myInfo](http://superboom.club/timejs-myinfo/)
+
+在GitHub仓库中实现了一个网页PPT，可以回放与正放
+
+demoPPT.html
