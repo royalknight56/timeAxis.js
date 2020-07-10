@@ -5,7 +5,7 @@ make html move
 ## 引入
 通过src引入，放在文档末尾
 ```
-<script src="ta.js"></script>
+<script src="sjl.js"></script>
 ```
 在script中创建新的timeJS类的对象
 
