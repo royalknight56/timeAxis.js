@@ -45,24 +45,24 @@
     <autotp class="ppt" f-time="-100/0" f-value="0/1" f-bind="opacity,$;" f-ifsave="false">
         幻灯片已退出
     </autotp>
-    <autotp class="ppt" f-time="1/100" f-value="0/1" f-bind="opacity,$;" f-ifsave="false" f-opt="stopPPT">
+    <autotp class="ppt" f-time="1/100" f-value="0/1" f-bind="opacity,$;" f-ifsave="false">
         幻灯片1 （F11进入全屏）
     </autotp>
 
-    <autotp class="ppt" f-time="101/200" f-value="0/1" f-bind="opacity,$;" f-ifsave="false" f-opt="stopPPT">
+    <autotp class="ppt" f-time="101/200" f-value="0/1" f-bind="opacity,$;" f-ifsave="false">
         幻灯片2
     </autotp>
-    <autotp class="ppt" f-time="201/300" f-value="0/1" f-bind="opacity,$;" f-ifsave="false" f-opt="stopPPT">
+    <autotp class="ppt" f-time="201/300" f-value="0/100" f-bind="left,$px;" f-ifsave="false" >
         幻灯片3
     </autotp>
-    <autotp class="ppt" f-time="301/400" f-value="0/1" f-bind="opacity,$;" f-ifsave="false" f-opt="stopPPT">
+    <autotp class="ppt" f-time="301/400" f-value="0/1" f-bind="opacity,$;" f-ifsave="false">
         幻灯片4
     </autotp>
-    <autotp class="ppt" f-time="401/500" f-value="0/1" f-bind="opacity,$;" f-ifsave="false" f-opt="stopPPT">
+    <autotp class="ppt" f-time="401/500" f-value="0/1" f-bind="opacity,$;" f-ifsave="false">
         幻灯片5
     </autotp>
 
-    <autotp class="ppt" f-time="501/600" f-value="0/1" f-bind="opacity,$;" f-ifsave="false" f-opt="stopPPT">
+    <autotp class="ppt" f-time="501/600" f-value="0/1" f-bind="opacity,$;" f-ifsave="false">
         幻灯片已结束 （F11退出全屏）
     </autotp>
 
@@ -85,6 +85,7 @@
         }
     })
     window.addEventListener("mousedown", function () {
+        console.log("start")
         tim.start();
     })
     window.addEventListener("mousewheel", function (e) {//添加滑动事件，可以回放与正放
