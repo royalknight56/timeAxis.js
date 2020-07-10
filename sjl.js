@@ -4,7 +4,7 @@
  * @Autor: RoyalKnight
  * @Date: 2020-07-01 09:45:44
  * @LastEditors: RoyalKnight
- * @LastEditTime: 2020-07-09 17:45:08
+ * @LastEditTime: 2020-07-10 18:11:52
  */
 function log(code) {
     switch (code) {
@@ -65,6 +65,7 @@ class timeJS {
 
 
         //进行初始化，隐藏所有元素，并记录f-start-time属性
+        
         var moveMan = document.getElementsByTagName(this.AUTO_TAG);
         for (let i = 0; i < moveMan.length; i++) {
             moveMan[i].setAttribute("f-start-time", moveMan[i].getAttribute(this.TP_TIME_ART))
@@ -77,6 +78,9 @@ class timeJS {
             this.hideElement(moveAuto[i]);
             this.render(moveAuto[i], 0);
         }
+
+        //document.styleSheets[0].addRule('tp', 'transition: visibility 0s');
+        //document.styleSheets[0].addRule('autotp', 'transition: visibility 0s');
         /**
          * @description: 检查配置
          * @author: RoyalKnight
@@ -128,12 +132,14 @@ class timeJS {
     //隐藏元素
     hideElement(e) {
         //e.style.opacity = '0';
-        e.style.display = "none"
+        //e.style.display = "none"
+        e.style.visibility="hidden"
     }
     //显示元素
     showElement(e) {
-        e.style.display = "";
         //e.style.opacity = '1';
+        //e.style.display = "";
+        e.style.visibility="visible"
     }
     callRender(num, type) {
         //时间轴

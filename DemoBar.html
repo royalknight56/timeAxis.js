@@ -1,0 +1,45 @@
+<!--
+ * @Description: 
+ * @Version: 2.0
+ * @Autor: RoyalKnight
+ * @Date: 2020-06-28 09:16:50
+ * @LastEditors: RoyalKnight
+ * @LastEditTime: 2020-07-10 17:53:27
+--> 
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    * {
+        transition: all 0.1s;
+    }
+
+    body {
+        background-color: black;
+    }
+</style>
+
+<body>
+    <tp style="left: 0;top: 0;position: relative;display: block; background-color: aliceblue;height: 100px;overflow: hidden;"
+    f-time="0/100" f-value="0/1000" f-bind="width,$%">
+
+    </tp>
+</body>
+<script src="sjl.js"></script>
+<script>
+    let tim = new timeJS({
+        speed: 1,
+        autoSpeed: 1,
+        delay: 0.1,
+    })
+    tim.bindCtrl(Array.from(Array(100), (v,k) =>k), function(){
+        console.log(tim.getTime());
+    }, false)
+</script>
+
+</html>
