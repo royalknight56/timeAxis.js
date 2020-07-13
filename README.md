@@ -28,9 +28,22 @@ let tim=new timeJS({
 #### 其他配置选项
 
 ##### death和birth
+
 规定了全局的开始时间和结束时间
 
 动画不会播放到这个时间之外
+
+##### delay
+
+规定了动画的转换延迟，原理是定义transition属性，使动画通过transition属性来更加顺滑
+
+定义之后还会解决visible的问题（两个动画不在同一时间却重叠在一起）
+
+例子：
+
+delay:0.2
+
+上面定义延迟为0.2s
 
 ## 使用
 
@@ -184,9 +197,10 @@ tim.bind({
 stop会停止播放，只有start之后才会继续进行，
 
 ### bindCtrl() bindAutoCtrl()方法
+bindCtrl(time,function,ifonce)
 
 用例：
-以下代码在300的autoTime（自动播放时间值）时会调用函数，false指定他是会重复调用的
+以下代码在300的autoTime（自动播放时间值）时会调用函数，false指定他是会重复调用的(true则是一次性的)
 
 ```
 tim.bindAutoCtrl(300, function () {
@@ -216,12 +230,16 @@ auto类别的同理
 
 ### //timeCtrl 已实现
 
+
+
 ## 未来
 
 为什么使用html来控制动画
 我考虑到可以通过html的简单属性就可以完成大部分动画效果
 因此，未来有可能通过一些工具就可以可视化的设置动画，让动画效果广泛的应用在html中
 即时你不熟悉Js，也能做出有设计感的动态页面
+
+[你的创意带来改变]
 
 ## 实例Demo
 苹果官网的手机介绍界面一直是我模仿的方向
@@ -235,4 +253,4 @@ auto类别的同理
 
 在GitHub仓库中实现了一个网页PPT，可以回放与正放
 
-demoPPT.html
+[demoPPT.html在线地址](http://superboom.club/timejs-ppt/)

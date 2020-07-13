@@ -4,36 +4,58 @@
  * @Autor: RoyalKnight
  * @Date: 2020-07-01 09:45:44
  * @LastEditors: RoyalKnight
- * @LastEditTime: 2020-07-10 18:11:52
+ * @LastEditTime: 2020-07-13 10:25:55
  */
 function log(code) {
+    var yellowMessStyle="color: yellow;background-color:black;font-size:10px";
+    var redMessStyle="color: red;background-color:white;font-size:10px";
+    var tipsMessStyle="color: white;font-size:10px";
+    var fixedTitle="%c└-->[fixed]┤";
+    var redMessTitle="%c[ERROR]";
+    var yellowMessTitle="%c[WARN]";
     switch (code) {
         case 101:
             console.log("%c[START]---------------时间轴JS--------------", "color: green");
-            console.log("%c[START]-------------------------------------", "color: green");
             break;
         case 201:
-            console.log("%c[ERROR]---tp-conf didn't exist-------", "color: red;background-color:white;font-size:15px");
+            console.log(redMessTitle+"---配置属性Object不存在-------", redMessStyle);
+            console.log(fixedTitle+`
+            new timeJS(
+                Object
+                )`, tipsMessStyle);
             break;
         case 202:
-            console.log("%c[WARN]---autoSpeed didn't initialization-------", "color: yellow;background-color:black;font-size:15px");
-            console.log("%c[WARN]---autoSpeed is defult value:1-----------", "color: yellow;background-color:black;font-size:15px");
+            console.log(yellowMessTitle+"---自动播放速度(autoSpeed)未初始化，设置为默认值1-------", yellowMessStyle);
+            console.log(`%c[fixed]->>>>new timeJS({
+                autoSpeed:2           
+            })`, tipsMessStyle);
             break;
         case 203:
-            console.log("%c[WARN]---speed didn't initialization-------", "color: yellow;background-color:black;font-size:15px");
-            console.log("%c[WARN]---speed is defult value:1-----------", "color: yellow;background-color:black;font-size:15px");
+            console.log(yellowMessTitle+"---手动播放速度(speed)未初始化，设置为默认值1-------", yellowMessStyle);
+            console.log(`%c[fixed]->>>>new timeJS({
+                speed:2            
+            })`, tipsMessStyle);
             break;
         case 204:
-            console.log("%c[WARN]---no f-value-------", "color: yellow;background-color:black;font-size:15px")
+            console.log(yellowMessTitle+"---一个元素没有设置f-value-------", yellowMessStyle)
             break;
         case 205:
-            console.log("%c[WARN]---no f-time-------", "color: yellow;background-color:black;font-size:15px")
+            console.log(yellowMessTitle+"---一个元素没有设置f-time-------", yellowMessStyle)
+            console.log(fixedTitle+`
+            <autotp f-time="401/500">`, tipsMessStyle);
             break;
         case 206:
-            console.log("%c[WARN]---no f-value-------", "color: yellow;background-color:black;font-size:15px")
+            console.log(yellowMessTitle+"---一个元素没有设置f-value-------", yellowMessStyle)
             break;
         case 207:
-            console.log("%c[WARN]---one element's bind didn't initialization-------", "color: yellow;background-color:black;font-size:15px");
+            console.log(yellowMessTitle+"---一个元素没有设置f-bind-------", yellowMessStyle);
+            break;
+        case 208:
+            console.log(yellowMessTitle+"---配置属性delay不存在，transition效果可能不理想-------", yellowMessStyle);
+            console.log(fixedTitle+`
+            new timeJS({
+                delay:0.5            
+            })`, tipsMessStyle);
             break;
     }
 }
@@ -79,8 +101,9 @@ class timeJS {
             this.render(moveAuto[i], 0);
         }
 
-        //document.styleSheets[0].addRule('tp', 'transition: visibility 0s');
-        //document.styleSheets[0].addRule('autotp', 'transition: visibility 0s');
+        // document.styleSheets[0].addRule('tp', 'transition: visibility 0s');
+        // document.styleSheets[0].addRule('*', 'transition: all 0.5s');
+        // document.styleSheets[0].addRule('autotp', 'transition: visibility 0s');
         /**
          * @description: 检查配置
          * @author: RoyalKnight
@@ -97,6 +120,11 @@ class timeJS {
                 log(203)
             } else {
                 this.speed = opt.speed;
+            }
+            if(opt.delay){
+                document.styleSheets[0].addRule('*', 'transition: all '+opt.delay+'s,'+'visibility 0s');
+            }else{
+                log(208)
             }
             if (opt.birth) {//初始化开始时间
                 this.birth = opt.birth;
