@@ -4,7 +4,7 @@
  * @Autor: RoyalKnight
  * @Date: 2020-07-01 09:45:44
  * @LastEditors: RoyalKnight
- * @LastEditTime: 2020-07-13 10:25:55
+ * @LastEditTime: 2020-07-30 10:44:08
  */
 function log(code) {
     var yellowMessStyle="color: yellow;background-color:black;font-size:10px";
@@ -86,20 +86,7 @@ class timeJS {
         this.death = Number.MAX_VALUE;
 
 
-        //进行初始化，隐藏所有元素，并记录f-start-time属性
         
-        var moveMan = document.getElementsByTagName(this.AUTO_TAG);
-        for (let i = 0; i < moveMan.length; i++) {
-            moveMan[i].setAttribute("f-start-time", moveMan[i].getAttribute(this.TP_TIME_ART))
-            this.hideElement(moveMan[i])
-            this.render(moveMan[i], 0);
-        }
-        var moveAuto = document.getElementsByTagName(this.TP_TAG);
-        for (let i = 0; i < moveAuto.length; i++) {
-            moveAuto[i].setAttribute("f-start-time", moveAuto[i].getAttribute(this.TP_TIME_ART))
-            this.hideElement(moveAuto[i]);
-            this.render(moveAuto[i], 0);
-        }
 
         // document.styleSheets[0].addRule('tp', 'transition: visibility 0s');
         // document.styleSheets[0].addRule('*', 'transition: all 0.5s');
@@ -122,7 +109,8 @@ class timeJS {
                 this.speed = opt.speed;
             }
             if(opt.delay){
-                document.styleSheets[0].addRule('*', 'transition: all '+opt.delay+'s,'+'visibility 0s');
+                // // document.styleSheets[0].addRule('*', 'transition: all '+opt.delay+'s,'+'visibility 0s');
+                // document.body.style.transition='all '+opt.delay+'s,'+'visibility 0s';
             }else{
                 log(208)
             }
@@ -134,6 +122,21 @@ class timeJS {
                 this.death = opt.death;
             } else {
             }
+        }
+        //进行初始化，隐藏所有元素，并记录f-start-time属性
+        var moveMan = document.getElementsByTagName(this.AUTO_TAG);
+        for (let i = 0; i < moveMan.length; i++) {
+            moveMan[i].setAttribute("f-start-time", moveMan[i].getAttribute(this.TP_TIME_ART))
+            moveMan[i].style.transition=opt?.delay?'all '+opt.delay+'s,'+'visibility 0s':"";
+            this.hideElement(moveMan[i])
+            this.render(moveMan[i], 0);
+        }
+        var moveAuto = document.getElementsByTagName(this.TP_TAG);
+        for (let i = 0; i < moveAuto.length; i++) {
+            moveAuto[i].setAttribute("f-start-time", moveAuto[i].getAttribute(this.TP_TIME_ART))
+            moveAuto[i].style.transition=opt?.delay?'all '+opt.delay+'s,'+'visibility 0s':"";
+            this.hideElement(moveAuto[i]);
+            this.render(moveAuto[i], 0);
         }
         /**
          * @description: 添加动作执行触发事件
@@ -147,27 +150,53 @@ class timeJS {
         //Key事件
         window.addEventListener("keydown", function (e) {
             if (e.key == "ArrowDown" || e.key == "ArrowRight") {
-                $this.callRender($this.speed, 0);
+                for(let i=0;i<$this.speed;i++){
+                    $this.callRender(1, 0);
+                }
             } else if (e.key == "ArrowUp" || e.key == "ArrowLeft") {
-                $this.callRender(-$this.speed, 0);
+                for(let i=0;i<$this.speed;i++){
+                    $this.callRender(-1, 0);
+                }
+                // $this.callRender(-$this.speed, 0);
             }
         })
         //Wheel事件
         window.addEventListener("mousewheel", function (e) {
-            $this.callRender(e.deltaY / Math.abs(e.deltaY) * $this.speed, 0);
+            let times=e.deltaY / Math.abs(e.deltaY) * $this.speed;
+            let abs=Math.abs(times)/times;
+            for(let i=0;i<Math.abs(times);i++){
+                $this.callRender(abs*1, 0);
+            }
+            // $this.callRender(, 0);
         })
+    }
+    hid(e){
+        console.log(1)
+        e.style.visibility="hidden"
+        e.ontransitionend=undefined
+    }
+    sho(e){
+        e.style.visibility="visible";
+
     }
     //隐藏元素
     hideElement(e) {
         //e.style.opacity = '0';
         //e.style.display = "none"
         e.style.visibility="hidden"
+        // e.ontransitionend=this.hid(e)
+        //e.addEventListener("transitionend",this.hid(e))
+        //e.removeEventListener("transitionend",this.sho)
     }
     //显示元素
     showElement(e) {
         //e.style.opacity = '1';
         //e.style.display = "";
-        e.style.visibility="visible"
+        // e.ontransitionend=undefined;
+        e.style.visibility="visible";
+        // e.removeEventListener("transitionend",this.hid)
+        //e.addEventListener("transitionend",this.sho(e))
+        
     }
     callRender(num, type) {
         //时间轴
