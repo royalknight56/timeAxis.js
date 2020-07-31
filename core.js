@@ -4,7 +4,7 @@
  * @Autor: RoyalKnight
  * @Date: 2020-07-01 09:45:44
  * @LastEditors: RoyalKnight
- * @LastEditTime: 2020-07-30 10:44:08
+ * @LastEditTime: 2020-07-31 15:35:46
  */
 function log(code) {
     var yellowMessStyle="color: yellow;background-color:black;font-size:10px";
@@ -59,7 +59,7 @@ function log(code) {
             break;
     }
 }
-class timeJS {
+export class timeJS {
 
     constructor(opt) {
         log(101);
@@ -116,12 +116,10 @@ class timeJS {
             }
             if (opt.birth) {//初始化开始时间
                 this.birth = opt.birth;
-            } else {
             }
             if (opt.death) {//初始化结束时间
                 this.death = opt.death;
-            } else {
-            }
+            } 
         }
         //进行初始化，隐藏所有元素，并记录f-start-time属性
         var moveMan = document.getElementsByTagName(this.AUTO_TAG);
@@ -276,9 +274,7 @@ class timeJS {
         let timeArt = moveElement.getAttribute(this.TP_TIME_ART);
         if (timeArt) {//有time属性
             let valueArt = moveElement.getAttribute(this.TP_VALUE_ART);
-            if (valueArt) {
-
-            } else {
+            if (!valueArt){
                 log(204)
                 return
             }
@@ -296,9 +292,7 @@ class timeJS {
                             if (this[funArry[i]]) {
                                 this[funArry[i]](values[j])
                                 ifmark = 1;
-                            } else {
-
-                            }
+                            } 
                         }
                     }
                     if (ifmark == 1) {
@@ -436,8 +430,7 @@ class timeJS {
      */
     bind(opt) {
         for (let key in opt) {
-            if (key == "bind") {
-            } else {
+            if (key != "bind"){
                 this[key] = opt[key];
             }
         }
